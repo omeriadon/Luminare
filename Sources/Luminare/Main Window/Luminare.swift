@@ -46,18 +46,11 @@ public class LuminareWindow: NSWindow {
             backgroundColor = .white.withAlphaComponent(0.001)
             ignoresMouseEvents = false
         }
-
-        alphaValue = 0
     }
 
     public func show() {
         orderFrontRegardless()
         NSApp.activate(ignoringOtherApps: true)
-
-        NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.2
-            self.animator().alphaValue = 1
-        }
     }
 
     func setBackgroundBlur(radius: Int) throws {
