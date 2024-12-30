@@ -97,11 +97,11 @@ class LuminareWindowAnimation: NSAnimation {
 
     override var currentProgress: NSAnimation.Progress {
         didSet {
-            // The last frame of this NSAnimation looks a little stuttery,
-            // so we multiply the progress by 1.01, and then make sure the last
-            // frame doesn't draw.
-            let progress = CGFloat(currentProgress * 1.01)
-            guard progress < 1 else {
+            let progress = CGFloat(currentProgress)
+
+            guard progress < 0.5 else {
+                window.setFrame(targetFrame, display: true)
+                stop()
                 return
             }
 

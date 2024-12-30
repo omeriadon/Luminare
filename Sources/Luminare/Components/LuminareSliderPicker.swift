@@ -43,6 +43,7 @@ public struct LuminareSliderPicker<V>: View where V: Equatable {
                     },
                     set: { newIndex in
                         selection = options[Int(newIndex)]
+                        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .drawCompleted)
                     }
                 ),
                 in: 0...Double(options.count - 1),

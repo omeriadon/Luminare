@@ -8,6 +8,8 @@
 import SwiftUI
 
 public struct LuminareSidebar<Content>: View where Content: View {
+    @Environment(\.appearsActive) private var appearsActive
+
     let content: () -> Content
 
     public init(@ViewBuilder content: @escaping () -> Content) {
@@ -18,6 +20,7 @@ public struct LuminareSidebar<Content>: View where Content: View {
         VStack(spacing: 24) {
             content()
         }
+        .opacity(appearsActive ? 1 : 0.5)
         .padding(.horizontal, 12)
         .frame(minHeight: 580, maxHeight: .infinity, alignment: .top)
         .luminareBackground()

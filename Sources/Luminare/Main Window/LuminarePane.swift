@@ -26,7 +26,7 @@ public struct LuminarePane<V, C>: View where V: View, C: View {
 
     public var body: some View {
         ZStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 LazyVStack(spacing: 16) {
                     content()
                 }
