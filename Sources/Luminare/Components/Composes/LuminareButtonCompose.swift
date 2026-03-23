@@ -50,11 +50,9 @@ public struct LuminareButtonCompose: View {
         }
         .buttonStyle(.luminare)
     }
-    
     public enum PositionInList {
         case top, middle, bottom, unknown
     }
-    
 }
 
 @available(macOS 15.0, *)
