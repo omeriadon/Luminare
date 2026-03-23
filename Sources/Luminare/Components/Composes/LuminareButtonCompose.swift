@@ -58,7 +58,7 @@ public struct LuminareButtonCompose: View {
 
 @available(macOS 15.0, *)
 #Preview(
-    "LuminareButton",
+    "LuminareButtonCompose",
     traits: .sizeThatFitsLayout
 ) {
     LuminarePane {
