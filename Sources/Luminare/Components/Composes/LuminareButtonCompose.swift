@@ -14,10 +14,6 @@ public struct LuminareButtonBuilder {
     }
 }
 
-public enum PositionInList {
-    case top, middle, bottom, unknown
-}
-
 public struct LuminareButtonCompose: View {
     @Environment(\.luminareButtonComposeSpacing) private var spacing
 
@@ -54,6 +50,11 @@ public struct LuminareButtonCompose: View {
         }
         .buttonStyle(.luminare)
     }
+    
+    public enum PositionInList {
+        case top, middle, bottom, unknown
+    }
+    
 }
 
 @available(macOS 15.0, *)
