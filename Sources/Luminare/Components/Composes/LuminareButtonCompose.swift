@@ -37,22 +37,17 @@ public struct LuminareButtonCompose: View {
             ForEach(Array(buttons.enumerated()), id: \.offset) { index, button in
                 let isFirst = index == 0
                 let isLast = index == buttons.count - 1
-                
+
+                let roundTop    = positionInList == .unknown || positionInList == .top
+                let roundBottom = positionInList == .unknown || positionInList == .bottom
+
                 AnyView(
                     button
                         .luminareRoundingBehavior(
-                            topLeading:     positionInList == .middle || positionInList == .bottom ? false :
-                                positionInList == .unknown                             ? true :
-                                isFirst ? true : false,
-                            topTrailing:    positionInList == .middle || positionInList == .bottom ? false :
-                                positionInList == .unknown                             ? true :
-                                isLast  ? true : false,
-                            bottomLeading:  positionInList == .middle || positionInList == .top    ? false :
-                                positionInList == .unknown                             ? true :
-                                isFirst ? true : false,
-                            bottomTrailing: positionInList == .middle || positionInList == .top    ? false :
-                                positionInList == .unknown                             ? true :
-                                isLast  ? true : false
+                            topLeading:     roundTop    && isFirst,
+                            topTrailing:    roundTop    && isLast,
+                            bottomLeading:  roundBottom && isFirst,
+                            bottomTrailing: roundBottom && isLast
                         )
                 )
             }
