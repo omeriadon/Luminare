@@ -6,58 +6,67 @@
 //
 
 import SwiftUI
-import VariadicViews
 
-public enum LuminareButtonComposePosition: Equatable {
+public enum LuminareButtonComposePosition {
     case top, middle, bottom, unknown
 }
 
-public struct LuminareButtonCompose<Content: View>: View {
-    @Environment(\.luminareButtonComposeSpacing) private var spacing
-
-    private let positionInList: LuminareButtonComposePosition
-    private let content: () -> Content
-
-    public init(
-        _ positionInList: LuminareButtonComposePosition = .unknown,
-        @ViewBuilder _ content: @escaping () -> Content
-    ) {
-        self.positionInList = positionInList
-        self.content = content
+@resultBuilder
+public struct LuminareButtonBuilder {
+    public static func buildExpression(_ expression: some View) -> [AnyView] {
+        [AnyView(expression)]
     }
 
-    public var body: some View {
-        UnaryVariadicView(content()) { children in
-            LuminareButtonComposeLayout(
-                children: children,
-                spacing: spacing,
-                positionInList: positionInList
-            )
-        }
-        .buttonStyle(.luminare)
+    public static func buildBlock(_ components: [AnyView]...) -> [AnyView] {
+        components.flatMap(\.self)
+    }
+
+    public static func buildOptional(_ component: [AnyView]?) -> [AnyView] {
+        component ?? []
+    }
+
+    public static func buildEither(first component: [AnyView]) -> [AnyView] {
+        component
+    }
+
+    public static func buildEither(second component: [AnyView]) -> [AnyView] {
+        component
+    }
+
+    public static func buildArray(_ components: [[AnyView]]) -> [AnyView] {
+        components.flatMap(\.self)
+    }
+
+    public static func buildLimitedAvailability(_ component: [AnyView]) -> [AnyView] {
+        component
     }
 }
 
-// MARK: - Layout
+public struct LuminareButtonCompose: View {
+    @Environment(\.luminareButtonComposeSpacing) private var spacing
 
-struct LuminareButtonComposeLayout: View {
-    let children: VariadicViewChildren
-    let spacing: CGFloat
-    let positionInList: LuminareButtonComposePosition
+    private let buttons: [AnyView]
+    private let positionInList: LuminareButtonComposePosition
 
-    var body: some View {
-        let first = children.first?.id
-        let last = children.last?.id
+    public init(
+        _ positionInList: LuminareButtonComposePosition = .unknown,
+        @LuminareButtonBuilder _ buttons: () -> [AnyView]
+    ) {
+        self.positionInList = positionInList
+        self.buttons = buttons()
+    }
 
-        let roundTop = positionInList == .unknown || positionInList == .top
-        let roundBottom = positionInList == .unknown || positionInList == .bottom
-
+    public var body: some View {
         HStack(spacing: spacing) {
-            ForEach(children) { child in
-                let isFirst = child.id == first
-                let isLast = child.id == last
+            ForEach(buttons.indices, id: \.self) { index in
+                let button = buttons[index]
+                let isFirst = index == 0
+                let isLast = index == buttons.count - 1
 
-                child
+                let roundTop = positionInList == .unknown || positionInList == .top
+                let roundBottom = positionInList == .unknown || positionInList == .bottom
+
+                button
                     .luminareRoundingBehavior(
                         topLeading: roundTop && isFirst,
                         topTrailing: roundTop && isLast,
@@ -66,6 +75,7 @@ struct LuminareButtonComposeLayout: View {
                     )
             }
         }
+        .buttonStyle(.luminare)
     }
 }
 
@@ -78,15 +88,10 @@ struct LuminareButtonComposeLayout: View {
 ) {
     LuminarePane {
         LuminareSection {
-            Text("LuminareButtonCompose")
+            Text("Other content ...")
+                .foregroundStyle(.secondary)
 
             LuminareButtonCompose(.bottom) {
-                Button {
-                    print(1)
-                } label: {
-                    Text("Button 1")
-                }
-
                 Button {
                     print(1)
                 } label: {
@@ -97,6 +102,12 @@ struct LuminareButtonComposeLayout: View {
                     print(2)
                 } label: {
                     Text("Button 2")
+                }
+
+                Button {
+                    print(3)
+                } label: {
+                    Text("Button 3")
                 }
             }
         }
