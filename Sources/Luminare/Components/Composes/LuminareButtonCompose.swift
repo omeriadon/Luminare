@@ -9,8 +9,23 @@ import SwiftUI
 
 @resultBuilder
 public struct LuminareButtonBuilder {
-    public static func buildBlock(_ components: any View...) -> [any View] {
+    public static func buildExpression<V: View>(_ expression: V) -> AnyView {
+        AnyView(expression)
+    }
+    public static func buildBlock(_ components: AnyView...) -> [AnyView] {
         components
+    }
+    public static func buildOptional(_ component: [AnyView]?) -> [AnyView] {
+        component ?? []
+    }
+    public static func buildEither(first component: [AnyView]) -> [AnyView] {
+        component
+    }
+    public static func buildEither(second component: [AnyView]) -> [AnyView] {
+        component
+    }
+    public static func buildArray(_ components: [[AnyView]]) -> [AnyView] {
+        components.flatMap { $0 }
     }
 }
 
