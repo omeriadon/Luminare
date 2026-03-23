@@ -45,7 +45,9 @@ public struct LuminareButtonCompose: View {
 
     public var body: some View {
         HStack(spacing: spacing) {
-            ForEach(Array(buttons.enumerated()), id: \.offset) { index, button in
+            ForEach(buttons.indices, id: \.self) { index in
+                let button = buttons[index]
+
                 let isFirst = index == 0
                 let isLast = index == buttons.count - 1
 
