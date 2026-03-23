@@ -9,23 +9,28 @@ import SwiftUI
 
 @resultBuilder
 public struct LuminareButtonBuilder {
-    public static func buildExpression<V: View>(_ expression: V) -> AnyView {
+    public static func buildExpression(_ expression: some View) -> AnyView {
         AnyView(expression)
     }
+
     public static func buildBlock(_ components: AnyView...) -> [AnyView] {
         components
     }
+
     public static func buildOptional(_ component: [AnyView]?) -> [AnyView] {
         component ?? []
     }
+
     public static func buildEither(first component: [AnyView]) -> [AnyView] {
         component
     }
+
     public static func buildEither(second component: [AnyView]) -> [AnyView] {
         component
     }
+
     public static func buildArray(_ components: [[AnyView]]) -> [AnyView] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 }
 
@@ -54,7 +59,6 @@ public struct LuminareButtonCompose: View {
                 let roundTop = positionInList == .unknown || positionInList == .top
                 let roundBottom = positionInList == .unknown || positionInList == .bottom
 
-
                 button
                     .luminareRoundingBehavior(
                         topLeading: roundTop && isFirst,
@@ -66,6 +70,7 @@ public struct LuminareButtonCompose: View {
         }
         .buttonStyle(.luminare)
     }
+
     public enum PositionInList {
         case top, middle, bottom, unknown
     }
