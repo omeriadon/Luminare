@@ -92,9 +92,9 @@ public extension EnvironmentValues {
     @Entry var luminareSectionMaxWidth: CGFloat? = .infinity
 
     // MARK: ButtonCompose
-    
+
     @Entry var luminareButtonComposeSpacing: CGFloat = 4
-    
+
     // MARK: Compose
 
     @Entry var luminareComposeControlSize: LuminareComposeControlSize = .automatic
