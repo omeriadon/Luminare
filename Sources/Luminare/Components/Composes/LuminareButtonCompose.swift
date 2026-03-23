@@ -6,60 +6,58 @@
 //
 
 import SwiftUI
+import VariadicViews
 
-@resultBuilder
-public struct LuminareButtonBuilder {
-    public static func buildExpression(_ expression: some View) -> [AnyView] {
-        [AnyView(expression)]
-    }
-
-    public static func buildBlock(_ components: [AnyView]...) -> [AnyView] {
-        components.flatMap(\.self)
-    }
-
-    public static func buildOptional(_ component: [AnyView]?) -> [AnyView] {
-        component ?? []
-    }
-
-    public static func buildEither(first component: [AnyView]) -> [AnyView] {
-        component
-    }
-
-    public static func buildEither(second component: [AnyView]) -> [AnyView] {
-        component
-    }
-
-    public static func buildArray(_ components: [[AnyView]]) -> [AnyView] {
-        components.flatMap(\.self)
-    }
+public enum LuminareButtonComposePosition {
+    case top, middle, bottom, unknown
 }
 
-public struct LuminareButtonCompose: View {
+public struct LuminareButtonCompose<Content: View>: View {
     @Environment(\.luminareButtonComposeSpacing) private var spacing
 
-    private let buttons: [AnyView]
-    private let positionInList: PositionInList
+    private let positionInList: LuminareButtonComposePosition
+    private let content: () -> Content
 
     public init(
-        _ positionInList: PositionInList = .unknown,
-        @LuminareButtonBuilder _ buttons: () -> [AnyView]
+        _ positionInList: LuminareButtonComposePosition = .unknown,
+        @ViewBuilder _ content: @escaping () -> Content
     ) {
         self.positionInList = positionInList
-        self.buttons = buttons()
+        self.content = content
     }
 
     public var body: some View {
+        UnaryVariadicView(content()) { children in
+            LuminareButtonComposeLayout(
+                children: children,
+                spacing: spacing,
+                positionInList: positionInList
+            )
+        }
+        .buttonStyle(.luminare)
+    }
+}
+
+// MARK: - Layout
+
+struct LuminareButtonComposeLayout: View {
+    let children: VariadicViewChildren
+    let spacing: CGFloat
+    let positionInList: LuminareButtonComposePosition
+
+    var body: some View {
+        let first = children.first?.id
+        let last = children.last?.id
+
+        let roundTop = positionInList == .unknown || positionInList == .top
+        let roundBottom = positionInList == .unknown || positionInList == .bottom
+
         HStack(spacing: spacing) {
-            ForEach(buttons.indices, id: \.self) { index in
-                let button = buttons[index]
+            ForEach(children) { child in
+                let isFirst = child.id == first
+                let isLast = child.id == last
 
-                let isFirst = index == 0
-                let isLast = index == buttons.count - 1
-
-                let roundTop = positionInList == .unknown || positionInList == .top
-                let roundBottom = positionInList == .unknown || positionInList == .bottom
-
-                button
+                child
                     .luminareRoundingBehavior(
                         topLeading: roundTop && isFirst,
                         topTrailing: roundTop && isLast,
@@ -68,13 +66,10 @@ public struct LuminareButtonCompose: View {
                     )
             }
         }
-        .buttonStyle(.luminare)
-    }
-
-    public enum PositionInList {
-        case top, middle, bottom, unknown
     }
 }
+
+// MARK: - Preview
 
 @available(macOS 15.0, *)
 #Preview(
