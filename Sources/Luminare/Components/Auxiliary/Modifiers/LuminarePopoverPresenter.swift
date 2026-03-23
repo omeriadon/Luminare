@@ -70,9 +70,11 @@ public struct LuminarePopoverPresenter<Content: View>: NSViewRepresentable {
         Coordinator(isPresented: $isPresented)
     }
 
+    @MainActor
     public class Coordinator: NSObject, NSPopoverDelegate {
         @Binding var isPresented: Bool
         var popover: NSPopover?
+        private weak var observedWindow: NSWindow?
 
         init(isPresented: Binding<Bool>) {
             _isPresented = isPresented
@@ -81,27 +83,36 @@ public struct LuminarePopoverPresenter<Content: View>: NSViewRepresentable {
 
         func startObservingWindow(_ window: NSWindow) {
             // Observe when the window loses focus
+            stopObservingWindow()
+            observedWindow = window
             NotificationCenter.default.addObserver(
-                forName: NSWindow.didResignKeyNotification,
-                object: window,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self else { return }
-                // The parent window is no longer focused, close the popover
-                DispatchQueue.main.async {
-                    self.isPresented = false
-                    self.popover?.close()
-                }
-            }
+                self,
+                selector: #selector(windowDidResignKey),
+                name: NSWindow.didResignKeyNotification,
+                object: window
+            )
+        }
+
+        func stopObservingWindow() {
+            NotificationCenter.default.removeObserver(
+                self,
+                name: NSWindow.didResignKeyNotification,
+                object: observedWindow
+            )
+            observedWindow = nil
+        }
+
+        @objc private func windowDidResignKey(_: Notification) {
+            isPresented = false
+            popover?.close()
         }
 
         public func popoverWillClose(_: Notification) {
-            DispatchQueue.main.async {
-                self.isPresented = false
-            }
+            isPresented = false
         }
 
         public func popoverDidClose(_: Notification) {
+            stopObservingWindow()
             popover = nil
         }
     }
