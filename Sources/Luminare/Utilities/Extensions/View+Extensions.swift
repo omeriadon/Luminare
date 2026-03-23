@@ -394,6 +394,8 @@ public extension View {
         )
     }
 
+    // MARK: ButtonCompose
+
     func luminareButtonComposeSpacing(_ spacing: CGFloat) -> some View {
         environment(\.luminareButtonComposeSpacing, spacing)
     }
