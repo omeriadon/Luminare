@@ -8,7 +8,7 @@
 import SwiftUI
 import VariadicViews
 
-public enum LuminareButtonComposePosition {
+public enum LuminareButtonComposePosition: Equatable {
     case top, middle, bottom, unknown
 }
 
