@@ -13,6 +13,6 @@ public enum LuminareBackgroundBlurStyle: Equatable, Sendable {
     ///  - Note: This type does not use private APIs and is stable.
     case regular
     /// Set a custom blur level for the window.
-    /// - Warning: This type uses private APIs and may break in a future OS. Test on all macOS versions you are targetting.
+    /// - Warning: This type uses private APIs and may break in a future OS. Test on all macOS versions you are targeting.
     case custom(radius: CGFloat)
 }
