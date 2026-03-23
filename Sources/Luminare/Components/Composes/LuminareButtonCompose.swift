@@ -32,12 +32,12 @@ public struct LuminareButtonBuilder {
 public struct LuminareButtonCompose: View {
     @Environment(\.luminareButtonComposeSpacing) private var spacing
 
-    private let buttons: [any View]
+    private let buttons: [AnyView]
     private let positionInList: PositionInList
 
     public init(
         _ positionInList: PositionInList = .unknown,
-        @LuminareButtonBuilder _ buttons: () -> [any View]
+        @LuminareButtonBuilder _ buttons: () -> [AnyView]
     ) {
         self.positionInList = positionInList
         self.buttons = buttons()
@@ -54,15 +54,14 @@ public struct LuminareButtonCompose: View {
                 let roundTop = positionInList == .unknown || positionInList == .top
                 let roundBottom = positionInList == .unknown || positionInList == .bottom
 
-                AnyView(
-                    button
-                        .luminareRoundingBehavior(
-                            topLeading: roundTop && isFirst,
-                            topTrailing: roundTop && isLast,
-                            bottomLeading: roundBottom && isFirst,
-                            bottomTrailing: roundBottom && isLast
-                        )
-                )
+
+                button
+                    .luminareRoundingBehavior(
+                        topLeading: roundTop && isFirst,
+                        topTrailing: roundTop && isLast,
+                        bottomLeading: roundBottom && isFirst,
+                        bottomTrailing: roundBottom && isLast
+                    )
             }
         }
         .buttonStyle(.luminare)
