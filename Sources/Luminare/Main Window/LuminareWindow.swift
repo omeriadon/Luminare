@@ -22,7 +22,7 @@ public class LuminareWindow: NSWindow {
     /// Initializes a ``LuminareWindow``.
     ///
     /// - Parameters:
-    ///   - backgroundBlurStyle: the default blur style used by ``luminareBackground(blurStyle:)`` within the window.
+    ///   - backgroundBlurStyle: the default blur style used by ``luminareBackground()`` within the window.
     ///   - content: the content view of the window, wrapped in a ``LuminareView``.
     public init(
         backgroundBlurStyle: LuminareBackgroundBlurStyle = .regular,
