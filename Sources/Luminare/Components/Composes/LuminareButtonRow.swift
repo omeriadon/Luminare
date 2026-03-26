@@ -1,5 +1,5 @@
 //
-//  LuminareButtonCompose.swift
+//  LuminareButtonRow.swift
 //  Luminare
 //
 //  Created by Adon Omeri on 23/3/2026.
@@ -83,7 +83,7 @@ public struct LuminareButtonRow: View {
 ) {
     LuminarePane {
         LuminareSection {
-			LuminareButtonRow {
+            LuminareButtonRow {
                 Button {
                     print(1)
                 } label: {
