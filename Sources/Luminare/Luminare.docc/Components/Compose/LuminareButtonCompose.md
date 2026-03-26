@@ -1,13 +1,13 @@
-# ``Luminare/LuminareButtonCompose``
+# ``Luminare/LuminareButtonRow``
 
 A horizontalrow of Luminare buttons.
 
-With optional parameter ``LuminareButtonComposePosition``, to set whether this is at the bottom or top of a list to adjust button rounding behaviour.
+
 
 @Row {
     @Column {
         ```swift
-        LuminareButtonCompose(.bottom) {
+			LuminareButtonRow {
             Button {
                 print(1)
             } label: {

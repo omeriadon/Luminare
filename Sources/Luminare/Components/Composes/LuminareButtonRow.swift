@@ -38,7 +38,7 @@ public struct LuminareButtonBuilder {
     }
 }
 
-public struct LuminareButtonCompose: View {
+public struct LuminareButtonRow: View {
     @Environment(\.luminareButtonComposeSpacing) private var spacing
 
     @Environment(\.luminareTopLeadingRounded) private var topLeadingRounded
@@ -78,12 +78,12 @@ public struct LuminareButtonCompose: View {
 
 @available(macOS 15.0, *)
 #Preview(
-    "LuminareButtonCompose",
+    "LuminareButtonRow",
     traits: .sizeThatFitsLayout
 ) {
     LuminarePane {
         LuminareSection {
-            LuminareButtonCompose {
+			LuminareButtonRow {
                 Button {
                     print(1)
                 } label: {
