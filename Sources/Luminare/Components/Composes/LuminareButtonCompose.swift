@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-public enum LuminareButtonComposePosition {
-    case top, middle, bottom, unknown
-}
-
 @resultBuilder
 public struct LuminareButtonBuilder {
     public static func buildExpression(_ expression: some View) -> [AnyView] {
@@ -45,14 +41,16 @@ public struct LuminareButtonBuilder {
 public struct LuminareButtonCompose: View {
     @Environment(\.luminareButtonComposeSpacing) private var spacing
 
+    @Environment(\.luminareTopLeadingRounded) private var topLeadingRounded
+    @Environment(\.luminareTopTrailingRounded) private var topTrailingRounded
+    @Environment(\.luminareBottomLeadingRounded) private var bottomLeadingRounded
+    @Environment(\.luminareBottomTrailingRounded) private var bottomTrailingRounded
+
     private let buttons: [AnyView]
-    private let positionInList: LuminareButtonComposePosition
 
     public init(
-        _ positionInList: LuminareButtonComposePosition = .unknown,
         @LuminareButtonBuilder _ buttons: () -> [AnyView]
     ) {
-        self.positionInList = positionInList
         self.buttons = buttons()
     }
 
@@ -63,15 +61,12 @@ public struct LuminareButtonCompose: View {
                 let isFirst = index == 0
                 let isLast = index == buttons.count - 1
 
-                let roundTop = positionInList == .unknown || positionInList == .top
-                let roundBottom = positionInList == .unknown || positionInList == .bottom
-
                 button
                     .luminareRoundingBehavior(
-                        topLeading: roundTop && isFirst,
-                        topTrailing: roundTop && isLast,
-                        bottomLeading: roundBottom && isFirst,
-                        bottomTrailing: roundBottom && isLast
+                        topLeading: isFirst ? topLeadingRounded : false,
+                        topTrailing: isLast ? topTrailingRounded : false,
+                        bottomLeading: isFirst ? bottomLeadingRounded : false,
+                        bottomTrailing: isLast ? bottomTrailingRounded : false
                     )
             }
         }
@@ -88,10 +83,7 @@ public struct LuminareButtonCompose: View {
 ) {
     LuminarePane {
         LuminareSection {
-            Text("Other content ...")
-                .foregroundStyle(.secondary)
-
-            LuminareButtonCompose(.bottom) {
+            LuminareButtonCompose {
                 Button {
                     print(1)
                 } label: {
@@ -110,6 +102,10 @@ public struct LuminareButtonCompose: View {
                     Text("Button 3")
                 }
             }
+            .luminareRoundingBehavior(top: true)
+
+            Text("Other content ...")
+                .foregroundStyle(.secondary)
         }
     }
 }
